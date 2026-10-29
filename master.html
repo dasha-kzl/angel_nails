@@ -1,247 +1,280 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Панель мастера</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary: #ec4899;
-      --primary-hover: #db2777;
-      --bg: #fdf2f8;
-      --card-bg: #ffffff;
-      --text: #1f2937;
-      --text-muted: #6b7280;
-      --border: #fbcfe8;
-      --success: #10b981;
-      --danger: #ef4444;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding-bottom: 40px; }
-    header {
-      background: var(--card-bg); border-bottom: 1px solid var(--border);
-      padding: 16px 24px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-    .logo { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
-    .container { max-width: 800px; margin: 24px auto; padding: 0 16px; }
-    .card { background: var(--card-bg); border-radius: 12px; padding: 24px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 24px; }
-    .card-title { font-size: 1.15rem; font-weight: 600; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
-    .input-group { margin-bottom: 16px; }
-    .input-group label { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 6px; }
-    .input-group input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; outline: none; }
-    .btn { padding: 10px 16px; border-radius: 8px; font-weight: 500; cursor: pointer; border: 1px solid transparent; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-primary:hover { background: var(--primary-hover); }
-    .btn-outline { background: transparent; border-color: var(--border); color: var(--text); }
-    .btn-danger { background: #fee2e2; color: var(--danger); }
-    .table-container { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; text-align: left; }
-    th, td { padding: 12px; border-bottom: 1px solid var(--border); }
-    th { font-size: 0.85rem; color: var(--text-muted); }
-    .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
-    .badge-free { background: #d1fae5; color: #065f46; }
-    .badge-booked { background: #fef3c7; color: #92400e; }
-    .toast {
-      position: fixed; bottom: 20px; right: 20px; background: #1f2937; color: white;
-      padding: 12px 20px; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: none; z-index: 1000;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кабинет мастера</title>
+    <style>
+        :root {
+            --primary: #ff69b4;
+            --primary-light: #fff0f5;
+            --bg: #fff5f8;
+            --text: #333;
+            --gray: #666;
+            --border: #ffd1dc;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: #fff;
+            padding: 24px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(255, 105, 180, 0.15);
+        }
+        h1, h2 { color: var(--primary); text-align: center; }
+        .logo { font-size: 24px; font-weight: bold; text-align: center; margin-bottom: 20px; color: var(--primary); }
+        .card {
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 16px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 6px 0 12px 0;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        button.btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        .badge-free { background: #e6f4ea; color: #137333; padding: 3px 6px; border-radius: 6px; font-size: 12px; }
+        .badge-busy { background: #fce8e6; color: #c5221f; padding: 3px 6px; border-radius: 6px; font-size: 12px; }
+        .badge-closed { background: #f1f3f4; color: #5f6368; padding: 3px 6px; border-radius: 6px; font-size: 12px; }
+        .action-btn {
+            padding: 5px 10px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .btn-open { background: #e6f4ea; color: #137333; }
+        .btn-close { background: #fce8e6; color: #c5221f; }
+        .hidden { display: none; }
+    </style>
 </head>
 <body>
 
-  <header>
+<div class="container">
     <div class="logo">Кабинет мастера</div>
-  </header>
 
-  <div class="container">
-    
-    <!-- ВХОД -->
-    <div id="admin-auth" class="card" style="max-width: 400px; margin: 40px auto;">
-      <div class="card-title">Введите PIN-код</div>
-      <form onsubmit="handleAdminLogin(event)">
-        <div class="input-group">
-          <input type="password" id="admin-pin" placeholder="****" required>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Войти</button>
-      </form>
+    <!-- Авторизация -->
+    <div id="login-box" class="card">
+        <h2>Вход</h2>
+        <label>Введите PIN-код (по умолчанию: 1234):</label>
+        <input type="password" id="pin-input" placeholder="PIN">
+        <button class="btn" onclick="checkPin()">Войти</button>
     </div>
 
-    <!-- ПАНЕЛЬ -->
-    <div id="admin-view" style="display: none;">
-      <div class="card">
-        <div class="card-title">Открыть окна для записи</div>
-        <form onsubmit="handleGenerateSlots(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; align-items: end;">
-          <div class="input-group" style="margin: 0;">
-            <label>Дата</label>
-            <input type="date" id="gen-date" required>
-          </div>
-          <div class="input-group" style="margin: 0;">
-            <label>С</label>
-            <input type="time" id="gen-start" value="09:00" required>
-          </div>
-          <div class="input-group" style="margin: 0;">
-            <label>До</label>
-            <input type="time" id="gen-end" value="18:00" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Сформировать</button>
-        </form>
-      </div>
-
-      <div class="card">
-        <div class="card-title">
-          <span>Расписание по часам</span>
-          <input type="date" id="admin-schedule-date" onchange="renderAdminSchedule()" style="width: auto; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px;">
+    <!-- Основная панель -->
+    <div id="master-panel" class="hidden">
+        
+        <!-- Управление услугами -->
+        <div class="card">
+            <h3>Услуги</h3>
+            <div id="master-services-list"></div>
+            <h4 style="margin:10px 0 5px 0; font-size:14px;">Добавить услугу:</h4>
+            <input type="text" id="new-s-name" placeholder="Название услуги">
+            <input type="text" id="new-s-duration" placeholder="Длительность (например: 1 час)">
+            <input type="text" id="new-s-badge" placeholder="Стикер (например: Хит 🔥)">
+            <button class="btn" onclick="addService()">Добавить услугу</button>
         </div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Время</th>
-                <th>Статус / Запись</th>
-                <th>Действие</th>
-              </tr>
-            </thead>
-            <tbody id="admin-schedule-body"></tbody>
-          </table>
-        </div>
-      </div>
 
-      <div class="card">
-        <div class="card-title">Настройки Telegram-уведомлений</div>
-        <form onsubmit="saveTgSettings(event)">
-          <div class="input-group">
-            <label>Bot Token</label>
-            <input type="text" id="tg-token" placeholder="Токен бота">
-          </div>
-          <div class="input-group">
-            <label>Chat ID</label>
-            <input type="text" id="tg-chat-id" placeholder="Ваш ID чата">
-          </div>
-          <button type="submit" class="btn btn-outline">Сохранить</button>
-        </form>
-      </div>
+        <!-- Управление расписанием -->
+        <div class="card">
+            <h3>Управление расписанием</h3>
+            <label>Дата:</label>
+            <input type="date" id="master-date" onchange="renderMasterSchedule()">
+            
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button class="btn btn-open" style="padding:10px;" onclick="setDayStatus('open')">Открыть весь день</button>
+                <button class="btn btn-close" style="padding:10px;" onclick="setDayStatus('closed')">Закрыть весь день</button>
+            </div>
+
+            <table id="schedule-table">
+                <thead>
+                    <tr>
+                        <th>Время</th>
+                        <th>Статус / Запись</th>
+                        <th>Действие</th>
+                    </tr>
+                </thead>
+                <tbody id="schedule-tbody"></tbody>
+            </table>
+        </div>
     </div>
+</div>
 
-  </div>
-
-  <div class="toast" id="toast"></div>
-
-  <script>
-    let MASTER_PIN = "1234"; // Можете поменять пин-код здесь
-
-    let slots = JSON.parse(localStorage.getItem('beauty_slots')) || [];
-    let bookings = JSON.parse(localStorage.getItem('beauty_bookings')) || [];
-    let tgSettings = JSON.parse(localStorage.getItem('beauty_tg')) || { token: '', chatId: '' };
-    let selectedDate = new Date().toISOString().split('T')[0];
-
-    function init() {
-      document.getElementById('admin-schedule-date').value = selectedDate;
-      document.getElementById('gen-date').value = selectedDate;
-      document.getElementById('tg-token').value = tgSettings.token || '';
-      document.getElementById('tg-chat-id').value = tgSettings.chatId || '';
-    }
-
-    function handleAdminLogin(e) {
-      e.preventDefault();
-      const pin = document.getElementById('admin-pin').value;
-      if (pin === MASTER_PIN) {
-        document.getElementById('admin-auth').style.display = 'none';
-        document.getElementById('admin-view').style.display = 'block';
-        renderAdminSchedule();
-      } else {
-        alert('Неверный PIN-код!');
-      }
-    }
-
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.innerText = msg;
-      t.style.display = 'block';
-      setTimeout(() => { t.style.display = 'none'; }, 3000);
-    }
-
-    function handleGenerateSlots(e) {
-      e.preventDefault();
-      const date = document.getElementById('gen-date').value;
-      const start = parseInt(document.getElementById('gen-start').value.split(':')[0]);
-      const end = parseInt(document.getElementById('gen-end').value.split(':')[0]);
-
-      for (let h = start; h < end; h++) {
-        const timeStr = (h < 10 ? '0' : '') + h + ':00';
-        const id = date + '_' + timeStr;
-        if (!slots.some(s => s.id === id)) {
-          slots.push({ id, date, time: timeStr, open: true });
+<script>
+    function checkPin() {
+        let pin = document.getElementById('pin-input').value;
+        if (pin === '1234') {
+            document.getElementById('login-box').classList.add('hidden');
+            document.getElementById('master-panel').classList.remove('hidden');
+            
+            let today = new Date().toISOString().split('T')[0];
+            document.getElementById('master-date').value = today;
+            renderMasterServices();
+            renderMasterSchedule();
+        } else {
+            alert('Неверный PIN-код!');
         }
-      }
-      localStorage.setItem('beauty_slots', JSON.stringify(slots));
-      renderAdminSchedule();
-      showToast('Окна созданы!');
     }
 
-    function renderAdminSchedule() {
-      const date = document.getElementById('admin-schedule-date').value;
-      const tbody = document.getElementById('admin-schedule-body');
-      tbody.innerHTML = '';
+    let defaultServices = [
+        { id: 1, name: "Маникюр классический", duration: "1 час", badge: "Хит 🔥" },
+        { id: 2, name: "Маникюр + Покрытие", duration: "1.5 часа", badge: "Топ ✨" },
+        { id: 3, name: "Наращивание ногтей", duration: "2.5 часа", badge: "Премиум 👑" }
+    ];
 
-      let hours = [];
-      for (let h = 8; h <= 20; h++) {
-        hours.push((h < 10 ? '0' : '') + h + ':00');
-      }
+    function renderMasterServices() {
+        let services = JSON.parse(localStorage.getItem('salon_services')) || defaultServices;
+        let list = document.getElementById('master-services-list');
+        list.innerHTML = '';
+        services.forEach((s, index) => {
+            let div = document.createElement('div');
+            div.style.display = "flex";
+            div.style.justifyContent = "space-between";
+            div.style.alignItems = "center";
+            div.style.marginBottom = "8px";
+            div.style.borderBottom = "1px solid #eee";
+            div.style.paddingBottom = "5px";
+            div.innerHTML = `
+                <span><b>${s.name}</b> (${s.duration}) [${s.badge || ''}]</span>
+                <button class="action-btn btn-close" onclick="deleteService(${index})">Удалить</button>
+            `;
+            list.appendChild(div);
+        });
+    }
 
-      hours.forEach(time => {
-        const slot = slots.find(s => s.date === date && s.time === time);
-        const booking = bookings.find(b => b.date === date && b.time === time);
+    function addService() {
+        let name = document.getElementById('new-s-name').value;
+        let duration = document.getElementById('new-s-duration').value;
+        let badge = document.getElementById('new-s-badge').value;
 
-        let statusText = 'Закрыто';
-        let actionBtn = `<button class="btn btn-outline" style="padding:4px 8px;" onclick="toggleSlot('${date}', '${time}')">Открыть</button>`;
-
-        if (booking) {
-          statusText = `<span class="badge badge-booked">Занят: ${booking.clientName} (${booking.clientPhone}) — ${booking.services}</span>`;
-          actionBtn = `<button class="btn btn-danger" style="padding:4px 8px;" onclick="cancelBooking(${booking.id})">Отменить</button>`;
-        } else if (slot && slot.open) {
-          statusText = `<span class="badge badge-free">Свободно</span>`;
-          actionBtn = `<button class="btn btn-outline" style="padding:4px 8px;" onclick="toggleSlot('${date}', '${time}')">Закрыть</button>`;
+        if (!name) {
+            alert('Заполните название услуги');
+            return;
         }
 
-        tbody.innerHTML += `
-          <tr>
-            <td><b>${time}</b></td>
-            <td>${statusText}</td>
-            <td>${actionBtn}</td>
-          </tr>
-        `;
-      });
+        let services = JSON.parse(localStorage.getItem('salon_services')) || defaultServices;
+        services.push({ id: Date.now(), name, duration, badge });
+        localStorage.setItem('salon_services', JSON.stringify(services));
+
+        document.getElementById('new-s-name').value = '';
+        document.getElementById('new-s-duration').value = '';
+        document.getElementById('new-s-badge').value = '';
+        renderMasterServices();
     }
 
-    function toggleSlot(date, time) {
-      const id = date + '_' + time;
-      const idx = slots.findIndex(s => s.id === id);
-      if (idx >= 0) {
-        slots[idx].open = !slots[idx].open;
-      } else {
-        slots.push({ id, date, time, open: true });
-      }
-      localStorage.setItem('beauty_slots', JSON.stringify(slots));
-      renderAdminSchedule();
+    function deleteService(index) {
+        let services = JSON.parse(localStorage.getItem('salon_services')) || defaultServices;
+        services.splice(index, 1);
+        localStorage.setItem('salon_services', JSON.stringify(services));
+        renderMasterServices();
     }
 
-    function cancelBooking(bookingId) {
-      bookings = bookings.filter(b => b.id !== bookingId);
-      localStorage.setItem('beauty_bookings', JSON.stringify(bookings));
-      renderAdminSchedule();
-      showToast('Запись отменена!');
+    function renderMasterSchedule() {
+        let date = document.getElementById('master-date').value;
+        let tbody = document.getElementById('schedule-tbody');
+        tbody.innerHTML = '';
+
+        let schedule = JSON.parse(localStorage.getItem('salon_schedule')) || {};
+        let daySlots = schedule[date] || {
+            "08:00": "closed", "09:00": "closed", "10:00": "closed", 
+            "11:00": "closed", "12:00": "closed", "13:00": "closed", 
+            "14:00": "closed", "15:00": "closed", "16:00": "closed", 
+            "17:00": "closed", "18:00": "closed"
+        };
+
+        Object.keys(daySlots).forEach(time => {
+            let status = daySlots[time];
+            let badgeHtml = '';
+            let actionBtn = '';
+
+            if (status === 'open') {
+                badgeHtml = '<span class="badge-free">Свободно</span>';
+                actionBtn = `<button class="action-btn btn-close" onclick="changeSlotTime('${date}', '${time}', 'closed')">Закрыть</button>`;
+            } else if (status === 'closed') {
+                badgeHtml = '<span class="badge-closed">Закрыто</span>';
+                actionBtn = `<button class="action-btn btn-open" onclick="changeSlotTime('${date}', '${time}', 'open')">Открыть</button>`;
+            } else {
+                badgeHtml = `<span class="badge-busy">${status}</span>`;
+                actionBtn = `<button class="action-btn btn-close" onclick="changeSlotTime('${date}', '${time}', 'open')">Снять запись</button>`;
+            }
+
+            let tr = document.createElement('tr');
+            tr.innerHTML = `<td><b>${time}</b></td><td>${badgeHtml}</td><td>${actionBtn}</td>`;
+            tbody.appendChild(tr);
+        });
     }
 
-    function saveTgSettings(e) {
-      e.preventDefault();
-      tgSettings.token = document.getElementById('tg-token').value;
-      tgSettings.chatId = document.getElementById('tg-chat-id').value;
-      localStorage.setItem('beauty_tg', JSON.stringify(tgSettings));
-      showToast('Настройки Telegram сохранены!');
+    function changeSlotTime(date, time, newStatus) {
+        let schedule = JSON.parse(localStorage.getItem('salon_schedule')) || {};
+        if (!schedule[date]) {
+            schedule[date] = {
+                "08:00": "closed", "09:00": "closed", "10:00": "closed", 
+                "11:00": "closed", "12:00": "closed", "13:00": "closed", 
+                "14:00": "closed", "15:00": "closed", "16:00": "closed", 
+                "17:00": "closed", "18:00": "closed"
+            };
+        }
+        schedule[date][time] = newStatus;
+        localStorage.setItem('salon_schedule', JSON.stringify(schedule));
+        renderMasterSchedule();
     }
 
-    document.addEventListener('DOMContentLoaded', init);
-  </script>
+    function setDayStatus(status) {
+        let date = document.getElementById('master-date').value;
+        let schedule = JSON.parse(localStorage.getItem('salon_schedule')) || {};
+        let daySlots = schedule[date] || {
+            "08:00": "closed", "09:00": "closed", "10:00": "closed", 
+            "11:00": "closed", "12:00": "closed", "13:00": "closed", 
+            "14:00": "closed", "15:00": "closed", "16:00": "closed", 
+            "17:00": "closed", "18:00": "closed"
+        };
+
+        Object.keys(daySlots).forEach(time => {
+            if (daySlots[time] === 'open' || daySlots[time] === 'closed') {
+                daySlots[time] = status;
+            }
+        });
+
+        schedule[date] = daySlots;
+        localStorage.setItem('salon_schedule', JSON.stringify(schedule));
+        renderMasterSchedule();
+    }
+</script>
 </body>
 </html>
