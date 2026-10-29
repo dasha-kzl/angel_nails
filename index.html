@@ -1,247 +1,292 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Онлайн-запись</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary: #ec4899;
-      --primary-hover: #db2777;
-      --bg: #fdf2f8;
-      --card-bg: #ffffff;
-      --text: #1f2937;
-      --text-muted: #6b7280;
-      --border: #fbcfe8;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding-bottom: 40px; }
-    header {
-      background: var(--card-bg); border-bottom: 1px solid var(--border);
-      padding: 16px 24px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-    .logo { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
-    .container { max-width: 600px; margin: 24px auto; padding: 0 16px; }
-    .card { background: var(--card-bg); border-radius: 12px; padding: 24px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 24px; }
-    .card-title { font-size: 1.15rem; font-weight: 600; margin-bottom: 16px; }
-    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; }
-    .service-card {
-      border: 2px solid var(--border); border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.2s;
-    }
-    .service-card.selected { border-color: var(--primary); background: #fdf2f8; }
-    .service-title { font-weight: 600; }
-    .service-duration { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
-    .dates-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 20px; }
-    .date-chip {
-      padding: 10px 16px; border: 1px solid var(--border); border-radius: 8px;
-      text-align: center; cursor: pointer; min-width: 80px; background: white;
-    }
-    .date-chip.selected { background: var(--primary); color: white; border-color: var(--primary); }
-    .slots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; margin-bottom: 20px; }
-    .slot-btn {
-      padding: 10px; border: 1px solid var(--border); border-radius: 6px; background: white; cursor: pointer; text-align: center;
-    }
-    .slot-btn.selected { background: var(--primary); color: white; }
-    .slot-btn.disabled { background: #f3f4f6; color: #9ca3af; cursor: not-allowed; border-color: #e5e7eb; }
-    .input-group { margin-bottom: 16px; }
-    .input-group label { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 6px; }
-    .input-group input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; outline: none; }
-    .btn { padding: 12px 16px; border-radius: 8px; font-weight: 500; cursor: pointer; border: none; width: 100%; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-primary:hover { background: var(--primary-hover); }
-    .toast {
-      position: fixed; bottom: 20px; right: 20px; background: #1f2937; color: white;
-      padding: 12px 20px; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: none; z-index: 1000;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Запись на услуги</title>
+    <style>
+        :root {
+            --primary: #ff69b4;
+            --primary-light: #fff0f5;
+            --bg: #fff5f8;
+            --text: #333;
+            --gray: #666;
+            --border: #ffd1dc;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: #fff;
+            padding: 24px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(255, 105, 180, 0.15);
+        }
+        h1, h2 {
+            color: var(--primary);
+            text-align: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        .service-card {
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .service-card.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        .service-info h3 {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+        .service-info p {
+            margin: 0;
+            color: var(--gray);
+            font-size: 14px;
+        }
+        .badge {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+        }
+        .time-slot {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .time-slot.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .time-slot.booked {
+            background: #f0f0f0;
+            color: #ccc;
+            border-color: #ddd;
+            cursor: not-allowed;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 16px 0;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button.btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button.btn:active {
+            opacity: 0.8;
+        }
+        .hidden { display: none; }
+        .success-box {
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
 
-  <header>
+<div class="container">
     <div class="logo">Angel Nails VGora</div>
-  </header>
-
-  <div class="container">
-    <div class="card">
-      <div class="card-title">1. Выберите услуги</div>
-      <div class="services-grid" id="client-services"></div>
+    
+    <div id="step-services">
+        <h2>Выберите услугу</h2>
+        <div id="services-list"></div>
+        <button class="btn" id="to-time-btn" disabled onclick="goToTime()">Далее</button>
     </div>
 
-    <div class="card">
-      <div class="card-title">2. Выберите дату и время</div>
-      <div class="dates-scroll" id="client-dates"></div>
-      <div class="slots-grid" id="client-slots"></div>
+    <div id="step-time" class="hidden">
+        <h2>Выберите время</h2>
+        <p id="selected-service-title" style="text-align:center; color:var(--gray);"></p>
+        <input type="date" id="booking-date" onchange="loadSlots()">
+        <div class="time-slots" id="slots-container"></div>
+        <button class="btn" id="to-form-btn" disabled onclick="goToForm()">Далее</button>
+        <button class="btn" style="background:#ddd; color:#333; margin-top:5px;" onclick="backToServices()">Назад</button>
     </div>
 
-    <div class="card">
-      <div class="card-title">3. Ваши данные</div>
-      <form id="booking-form" onsubmit="handleBooking(event)">
-        <div class="input-group">
-          <label>Имя</label>
-          <input type="text" id="client-name" placeholder="Введите ваше имя" required>
-        </div>
-        <div class="input-group">
-          <label>Телефон</label>
-          <input type="tel" id="client-phone" placeholder="+7 (999) 000-00-00" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Подтвердить запись</button>
-      </form>
+    <div id="step-form" class="hidden">
+        <h2>Ваши данные</h2>
+        <label>Имя:</label>
+        <input type="text" id="client-name" placeholder="Введите ваше имя">
+        <label>Телефон:</label>
+        <input type="tel" id="client-phone" placeholder="+7 (...) ...-..-..">
+        <button class="btn" onclick="submitBooking()">Записаться</button>
+        <button class="btn" style="background:#ddd; color:#333; margin-top:5px;" onclick="backToTime()">Назад</button>
     </div>
-  </div>
 
-  <div class="toast" id="toast"></div>
+    <div id="step-success" class="hidden success-box">
+        <h2>Вы успешно записаны! 🎉</h2>
+        <p>Ждем вас в назначенное время.</p>
+        <button class="btn" onclick="resetForm()">Записаться еще</button>
+    </div>
+</div>
 
-  <script>
-    // ВАЖНО: Укажите здесь адрес вашего админ-сайта (Файл 2), чтобы они синхронизировались через облачное хранилище или локально
-    // Для полноценной работы с базой данных в будущем можно использовать бэкенд, а пока данные сохраняются на вашем устройстве или в облаке.
-    const DEFAULT_SERVICES = [
-      { id: 1, name: 'Маникюр', duration: 90 },
-      { id: 2, name: 'Педикюр', duration: 90 },
-      { id: 3, name: 'Ламинирование', duration: 60 },
-      { id: 4, name: 'Наращивание ресниц', duration: 120 }
+<script>
+    let defaultServices = [
+        { id: 1, name: "Маникюр классический", duration: "1 час", badge: "Хит 🔥" },
+        { id: 2, name: "Маникюр + Покрытие", duration: "1.5 часа", badge: "Топ ✨" },
+        { id: 3, name: "Наращивание ногтей", duration: "2.5 часа", badge: "Премиум 👑" }
     ];
 
-    let services = JSON.parse(localStorage.getItem('beauty_services')) || DEFAULT_SERVICES;
-    let slots = JSON.parse(localStorage.getItem('beauty_slots')) || [];
-    let bookings = JSON.parse(localStorage.getItem('beauty_bookings')) || [];
+    let services = JSON.parse(localStorage.getItem('salon_services')) || defaultServices;
+    let selectedService = null;
+    let selectedDate = null;
+    let selectedTime = null;
 
-    let selectedServices = [];
-    let selectedDate = new Date().toISOString().split('T')[0];
-    let selectedSlotTime = null;
-
-    function init() {
-      if (slots.length === 0) generateDefaultSlots();
-      renderClientServices();
-      renderClientDates();
-      renderClientSlots();
+    function renderServices() {
+        const list = document.getElementById('services-list');
+        list.innerHTML = '';
+        services.forEach(s => {
+            let card = document.createElement('div');
+            card.className = `service-card ${selectedService?.id === s.id ? 'selected' : ''}`;
+            card.innerHTML = `
+                <div class="service-info">
+                    <h3>${s.name}</h3>
+                    <p>⏱ ${s.duration}</p>
+                </div>
+                <div class="badge">${s.badge || 'Услуга'}</div>
+            `;
+            card.onclick = () => {
+                selectedService = s;
+                document.getElementById('to-time-btn').removeAttribute('disabled');
+                renderServices();
+            };
+            list.appendChild(card);
+        });
     }
 
-    function generateDefaultSlots() {
-      const today = new Date();
-      for (let d = 0; d < 7; d++) {
-        const dateStr = new Date(today.getTime() + d * 86400000).toISOString().split('T')[0];
-        for (let h = 9; h <= 18; h++) {
-          const timeStr = (h < 10 ? '0' : '') + h + ':00';
-          slots.push({ id: dateStr + '_' + timeStr, date: dateStr, time: timeStr, open: true });
+    function goToTime() {
+        document.getElementById('step-services').classList.add('hidden');
+        document.getElementById('step-time').classList.remove('hidden');
+        document.getElementById('selected-service-title').innerText = `${selectedService.name} (${selectedService.duration})`;
+        
+        let today = new Date().toISOString().split('T')[0];
+        document.getElementById('booking-date').value = today;
+        loadSlots();
+    }
+
+    function backToServices() {
+        document.getElementById('step-time').classList.add('hidden');
+        document.getElementById('step-services').classList.remove('hidden');
+    }
+
+    function loadSlots() {
+        selectedDate = document.getElementById('booking-date').value;
+        const container = document.getElementById('slots-container');
+        container.innerHTML = '';
+        
+        let schedule = JSON.parse(localStorage.getItem('salon_schedule')) || {};
+        let daySlots = schedule[selectedDate] || {
+            "09:00": "open", "10:00": "open", "11:00": "open", 
+            "12:00": "open", "13:00": "open", "14:00": "open", 
+            "15:00": "open", "16:00": "open", "17:00": "open"
+        };
+
+        Object.keys(daySlots).forEach(time => {
+            let status = daySlots[time];
+            let isBooked = (status !== 'open');
+
+            let slot = document.createElement('div');
+            slot.className = `time-slot ${isBooked ? 'booked' : ''} ${selectedTime === time ? 'selected' : ''}`;
+            slot.innerText = time;
+
+            if (!isBooked) {
+                slot.onclick = () => {
+                    selectedTime = time;
+                    document.getElementById('to-form-btn').removeAttribute('disabled');
+                    loadSlots();
+                };
+            }
+            container.appendChild(slot);
+        });
+    }
+
+    function goToForm() {
+        document.getElementById('step-time').classList.add('hidden');
+        document.getElementById('step-form').classList.remove('hidden');
+    }
+
+    function backToTime() {
+        document.getElementById('step-form').classList.add('hidden');
+        document.getElementById('step-time').classList.remove('hidden');
+    }
+
+    function submitBooking() {
+        let name = document.getElementById('client-name').value;
+        let phone = document.getElementById('client-phone').value;
+
+        if (!name || !phone) {
+            alert('Пожалуйста, заполните имя и телефон');
+            return;
         }
-      }
-      localStorage.setItem('beauty_slots', JSON.stringify(slots));
+
+        let schedule = JSON.parse(localStorage.getItem('salon_schedule')) || {};
+        if (!schedule[selectedDate]) schedule[selectedDate] = {};
+        
+        schedule[selectedDate][selectedTime] = `${name} (${phone}) - ${selectedService.name}`;
+        localStorage.setItem('salon_schedule', JSON.stringify(schedule));
+
+        document.getElementById('step-form').classList.add('hidden');
+        document.getElementById('step-success').classList.remove('hidden');
     }
 
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.innerText = msg;
-      t.style.display = 'block';
-      setTimeout(() => { t.style.display = 'none'; }, 3000);
+    function resetForm() {
+        selectedService = null;
+        selectedTime = null;
+        document.getElementById('client-name').value = '';
+        document.getElementById('client-phone').value = '';
+        document.getElementById('step-success').classList.add('hidden');
+        document.getElementById('step-services').classList.remove('hidden');
+        document.getElementById('to-time-btn').setAttribute('disabled', 'true');
+        renderServices();
     }
 
-    function renderClientServices() {
-      const container = document.getElementById('client-services');
-      container.innerHTML = services.map(s => {
-        const isSelected = selectedServices.includes(s.id);
-        return `
-          <div class="service-card ${isSelected ? 'selected' : ''}" onclick="toggleService(${s.id})">
-            <div class="service-title">${s.name}</div>
-            <div class="service-duration">${s.duration} мин</div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function toggleService(id) {
-      if (selectedServices.includes(id)) {
-        selectedServices = selectedServices.filter(i => i !== id);
-      } else {
-        selectedServices.push(id);
-      }
-      renderClientServices();
-      renderClientSlots();
-    }
-
-    function renderClientDates() {
-      const container = document.getElementById('client-dates');
-      const dates = [];
-      const today = new Date();
-      for (let i = 0; i < 14; i++) {
-        const d = new Date(today.getTime() + i * 86400000);
-        dates.push(d.toISOString().split('T')[0]);
-      }
-
-      container.innerHTML = dates.map(d => {
-        const parts = d.split('-');
-        return `
-          <div class="date-chip ${d === selectedDate ? 'selected' : ''}" onclick="selectDate('${d}')">
-            ${parts[2]}.${parts[1]}
-          </div>
-        `;
-      }).join('');
-    }
-
-    function selectDate(d) {
-      selectedDate = d;
-      selectedSlotTime = null;
-      renderClientDates();
-      renderClientSlots();
-    }
-
-    function renderClientSlots() {
-      const container = document.getElementById('client-slots');
-      const daySlots = slots.filter(s => s.date === selectedDate && s.open);
-
-      if (daySlots.length === 0) {
-        container.innerHTML = '<div style="color: var(--text-muted);">Нет доступных окон на эту дату</div>';
-        return;
-      }
-
-      container.innerHTML = daySlots.map(s => {
-        const isBooked = bookings.some(b => b.date === selectedDate && b.time === s.time);
-        const isSelected = selectedSlotTime === s.time;
-        return `
-          <button type="button" class="slot-btn ${isBooked ? 'disabled' : ''} ${isSelected ? 'selected' : ''}" 
-                  ${isBooked ? 'disabled' : ''} onclick="selectSlot('${s.time}')">
-            ${s.time}
-          </button>
-        `;
-      }).join('');
-    }
-
-    function selectSlot(time) {
-      selectedSlotTime = time;
-      renderClientSlots();
-    }
-
-    function handleBooking(e) {
-      e.preventDefault();
-      if (selectedServices.length === 0) return alert('Выберите хотя бы одну услугу!');
-      if (!selectedSlotTime) return alert('Выберите время записи!');
-
-      const name = document.getElementById('client-name').value;
-      const phone = document.getElementById('client-phone').value;
-      const selectedServiceNames = services.filter(s => selectedServices.includes(s.id)).map(s => s.name).join(', ');
-
-      const booking = {
-        id: Date.now(),
-        date: selectedDate,
-        time: selectedSlotTime,
-        services: selectedServiceNames,
-        clientName: name,
-        clientPhone: phone
-      };
-
-      bookings.push(booking);
-      localStorage.setItem('beauty_bookings', JSON.stringify(bookings));
-
-      showToast('Запись успешно оформлена!');
-
-      selectedServices = [];
-      selectedSlotTime = null;
-      document.getElementById('booking-form').reset();
-      renderClientServices();
-      renderClientSlots();
-    }
-
-    document.addEventListener('DOMContentLoaded', init);
-  </script>
+    renderServices();
+</script>
 </body>
 </html>
