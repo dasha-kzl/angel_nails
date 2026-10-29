@@ -24,7 +24,7 @@
       border-bottom: 1px solid var(--border);
       padding: 16px 24px;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
       position: sticky; top: 0; z-index: 100;
@@ -35,7 +35,6 @@
     }
     .btn-primary { background: var(--primary); color: white; }
     .btn-primary:hover { background: var(--primary-hover); }
-    .btn-outline { background: transparent; border-color: var(--border); color: var(--text); }
     .container { max-width: 900px; margin: 24px auto; padding: 0 16px; }
     .card { background: var(--card-bg); border-radius: 12px; padding: 24px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 24px; }
     .card-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 16px; }
@@ -71,7 +70,6 @@
 
   <header>
     <div class="logo">Beauty Booking</div>
-    <a href="master.html" class="btn btn-outline">Кабинет мастера</a>
   </header>
 
   <div class="container">
@@ -120,22 +118,9 @@
     let selectedSlotTime = null;
 
     function init() {
-      if (slots.length === 0) generateDefaultSlots();
       renderClientServices();
       renderClientDates();
       renderClientSlots();
-    }
-
-    function generateDefaultSlots() {
-      const today = new Date();
-      for (let d = 0; d < 7; d++) {
-        const dateStr = new Date(today.getTime() + d * 86400000).toISOString().split('T')[0];
-        for (let h = 9; h <= 18; h++) {
-          const timeStr = (h < 10 ? '0' : '') + h + ':00';
-          slots.push({ id: dateStr + '_' + timeStr, date: dateStr, time: timeStr, open: true });
-        }
-      }
-      localStorage.setItem('beauty_slots', JSON.stringify(slots));
     }
 
     function showToast(msg) {
@@ -195,10 +180,11 @@
 
     function renderClientSlots() {
       const container = document.getElementById('client-slots');
+      // Показываем только те слоты, которые мастер явно открыл (open: true)
       const daySlots = slots.filter(s => s.date === selectedDate && s.open);
 
       if (daySlots.length === 0) {
-        container.innerHTML = '<div style="color: var(--text-muted);">Нет доступных окон на эту дату</div>';
+        container.innerHTML = '<div style="color: var(--text-muted);">На эту дату нет свободных окон для записи</div>';
         return;
       }
 
