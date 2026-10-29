@@ -84,45 +84,43 @@
     <!-- ПАНЕЛЬ МАСТЕРА -->
     <div id="admin-view" style="display: none;">
       
-      <!-- Управление окнами (Массовое открытие/закрытие) -->
+      <!-- Массовое открытие окон -->
       <div class="card">
-        <div class="card-title">Массовое открытие окон</div>
-        <form onsubmit="handleBatchSlots(event)">
+        <div class="card-title">Быстрое открытие окон на день</div>
+        <div class="input-group">
+          <label>Дата</label>
+          <input type="date" id="batch-date">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
           <div class="input-group">
-            <label>Дата</label>
-            <input type="date" id="batch-date" required>
+            <label>С какого часа</label>
+            <select id="batch-start">
+              <option value="08">08:00</option>
+              <option value="09" selected>09:00</option>
+              <option value="10">10:00</option>
+              <option value="11">11:00</option>
+              <option value="12">12:00</option>
+              <option value="13">13:00</option>
+              <option value="14">14:00</option>
+              <option value="15">15:00</option>
+              <option value="16">16:00</option>
+            </select>
           </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-            <div class="input-group">
-              <label>С (час)</label>
-              <select id="batch-start">
-                <option value="08">08:00</option>
-                <option value="09" selected>09:00</option>
-                <option value="10">10:00</option>
-                <option value="11">11:00</option>
-                <option value="12">12:00</option>
-                <option value="13">13:00</option>
-                <option value="14">14:00</option>
-                <option value="15">15:00</option>
-                <option value="16">16:00</option>
-              </select>
-            </div>
-            <div class="input-group">
-              <label>До (час)</label>
-              <select id="batch-end">
-                <option value="17">17:00</option>
-                <option value="18" selected>18:00</option>
-                <option value="19">19:00</option>
-                <option value="20">20:00</option>
-                <option value="21">21:00</option>
-              </select>
-            </div>
+          <div class="input-group">
+            <label>До какого часа</label>
+            <select id="batch-end">
+              <option value="17">17:00</option>
+              <option value="18" selected>18:00</option>
+              <option value="19">19:00</option>
+              <option value="20">20:00</option>
+              <option value="21">21:00</option>
+            </select>
           </div>
-          <div style="display: flex; gap: 10px;">
-            <button type="submit" class="btn btn-primary" style="flex: 1;" onclick="window.batchAction='open'">Открыть выбранное</button>
-            <button type="submit" class="btn btn-danger" style="flex: 1; background: #fee2e2; color: #ef4444;" onclick="window.batchAction='close'">Закрыть выбранное</button>
-          </div>
-        </form>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button type="button" class="btn btn-primary" style="flex: 1;" onclick="applyBatchSlots(true)">Открыть диапазон</button>
+          <button type="button" class="btn btn-danger" style="flex: 1; background: #fee2e2; color: #ef4444;" onclick="applyBatchSlots(false)">Закрыть диапазон</button>
+        </div>
       </div>
 
       <!-- Управление услугами -->
@@ -157,6 +155,22 @@
         </div>
       </div>
 
+      <!-- Настройки Telegram -->
+      <div class="card">
+        <div class="card-title">Telegram-уведомления</div>
+        <form onsubmit="saveTgSettings(event)">
+          <div class="input-group">
+            <label>Bot Token</label>
+            <input type="text" id="tg-token" placeholder="123456789:ABCdefGHI...">
+          </div>
+          <div class="input-group">
+            <label>Chat ID мастера</label>
+            <input type="text" id="tg-chat-id" placeholder="987654321">
+          </div>
+          <button type="submit" class="btn btn-outline" style="width: 100%;">Сохранить настройки Telegram</button>
+        </form>
+      </div>
+
     </div>
   </div>
 
@@ -174,6 +188,7 @@
     let services = JSON.parse(localStorage.getItem('beauty_services')) || DEFAULT_SERVICES;
     let slots = JSON.parse(localStorage.getItem('beauty_slots')) || [];
     let bookings = JSON.parse(localStorage.getItem('beauty_bookings')) || [];
+    let tgSettings = JSON.parse(localStorage.getItem('beauty_tg')) || { token: '', chatId: '' };
 
     function showToast(msg) {
       const t = document.getElementById('toast');
@@ -192,6 +207,9 @@
         let today = new Date().toISOString().split('T')[0];
         document.getElementById('admin-schedule-date').value = today;
         document.getElementById('batch-date').value = today;
+        document.getElementById('tg-token').value = tgSettings.token || '';
+        document.getElementById('tg-chat-id').value = tgSettings.chatId || '';
+
         renderAdminServices();
         renderAdminSchedule();
       } else {
@@ -199,12 +217,15 @@
       }
     }
 
-    function handleBatchSlots(e) {
-      e.preventDefault();
+    function applyBatchSlots(isOpen) {
       const date = document.getElementById('batch-date').value;
       const startHour = parseInt(document.getElementById('batch-start').value);
       const endHour = parseInt(document.getElementById('batch-end').value);
-      const isOpen = (window.batchAction === 'open');
+
+      if (!date) {
+        alert('Выберите дату!');
+        return;
+      }
 
       for (let h = startHour; h <= endHour; h++) {
         const timeStr = (h < 10 ? '0' : '') + h + ':00';
@@ -308,6 +329,14 @@
       localStorage.setItem('beauty_bookings', JSON.stringify(bookings));
       renderAdminSchedule();
       showToast('Запись отменена!');
+    }
+
+    function saveTgSettings(e) {
+      e.preventDefault();
+      tgSettings.token = document.getElementById('tg-token').value;
+      tgSettings.chatId = document.getElementById('tg-chat-id').value;
+      localStorage.setItem('beauty_tg', JSON.stringify(tgSettings));
+      showToast('Настройки Telegram сохранены!');
     }
   </script>
 </body>
