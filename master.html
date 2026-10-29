@@ -42,7 +42,7 @@
     .card-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
     .input-group { margin-bottom: 16px; }
     .input-group label { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 6px; }
-    .input-group input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; outline: none; }
+    .input-group input, .input-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; outline: none; background: white; }
     .table-container { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; text-align: left; }
     th, td { padding: 12px; border-bottom: 1px solid var(--border); }
@@ -84,6 +84,47 @@
     <!-- ПАНЕЛЬ МАСТЕРА -->
     <div id="admin-view" style="display: none;">
       
+      <!-- Управление окнами (Массовое открытие/закрытие) -->
+      <div class="card">
+        <div class="card-title">Массовое открытие окон</div>
+        <form onsubmit="handleBatchSlots(event)">
+          <div class="input-group">
+            <label>Дата</label>
+            <input type="date" id="batch-date" required>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="input-group">
+              <label>С (час)</label>
+              <select id="batch-start">
+                <option value="08">08:00</option>
+                <option value="09" selected>09:00</option>
+                <option value="10">10:00</option>
+                <option value="11">11:00</option>
+                <option value="12">12:00</option>
+                <option value="13">13:00</option>
+                <option value="14">14:00</option>
+                <option value="15">15:00</option>
+                <option value="16">16:00</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>До (час)</label>
+              <select id="batch-end">
+                <option value="17">17:00</option>
+                <option value="18" selected>18:00</option>
+                <option value="19">19:00</option>
+                <option value="20">20:00</option>
+                <option value="21">21:00</option>
+              </select>
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button type="submit" class="btn btn-primary" style="flex: 1;" onclick="window.batchAction='open'">Открыть выбранное</button>
+            <button type="submit" class="btn btn-danger" style="flex: 1; background: #fee2e2; color: #ef4444;" onclick="window.batchAction='close'">Закрыть выбранное</button>
+          </div>
+        </form>
+      </div>
+
       <!-- Управление услугами -->
       <div class="card">
         <div class="card-title">Управление услугами</div>
@@ -96,10 +137,10 @@
         </form>
       </div>
 
-      <!-- Управление расписанием -->
+      <!-- Расписание по часам -->
       <div class="card">
         <div class="card-title">
-          <span>Расписание</span>
+          <span>Расписание на день</span>
           <input type="date" id="admin-schedule-date" onchange="renderAdminSchedule()" style="width: auto; padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px;">
         </div>
         <div class="table-container">
@@ -150,11 +191,36 @@
         
         let today = new Date().toISOString().split('T')[0];
         document.getElementById('admin-schedule-date').value = today;
+        document.getElementById('batch-date').value = today;
         renderAdminServices();
         renderAdminSchedule();
       } else {
         alert('Неверный PIN-код!');
       }
+    }
+
+    function handleBatchSlots(e) {
+      e.preventDefault();
+      const date = document.getElementById('batch-date').value;
+      const startHour = parseInt(document.getElementById('batch-start').value);
+      const endHour = parseInt(document.getElementById('batch-end').value);
+      const isOpen = (window.batchAction === 'open');
+
+      for (let h = startHour; h <= endHour; h++) {
+        const timeStr = (h < 10 ? '0' : '') + h + ':00';
+        const id = date + '_' + timeStr;
+        const existing = slots.find(s => s.id === id);
+
+        if (existing) {
+          existing.open = isOpen;
+        } else {
+          slots.push({ id, date, time: timeStr, open: isOpen });
+        }
+      }
+
+      localStorage.setItem('beauty_slots', JSON.stringify(slots));
+      renderAdminSchedule();
+      showToast(isOpen ? 'Окна успешно открыты!' : 'Окна закрыты!');
     }
 
     function renderAdminServices() {
