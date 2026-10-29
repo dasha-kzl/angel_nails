@@ -84,46 +84,7 @@
     <!-- ПАНЕЛЬ МАСТЕРА -->
     <div id="admin-view" style="display: none;">
       
-      <!-- Массовое открытие окон -->
-      <div class="card">
-        <div class="card-title">Быстрое открытие окон на день</div>
-        <div class="input-group">
-          <label>Дата</label>
-          <input type="date" id="batch-date">
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-          <div class="input-group">
-            <label>С какого часа</label>
-            <select id="batch-start">
-              <option value="08">08:00</option>
-              <option value="09" selected>09:00</option>
-              <option value="10">10:00</option>
-              <option value="11">11:00</option>
-              <option value="12">12:00</option>
-              <option value="13">13:00</option>
-              <option value="14">14:00</option>
-              <option value="15">15:00</option>
-              <option value="16">16:00</option>
-            </select>
-          </div>
-          <div class="input-group">
-            <label>До какого часа</label>
-            <select id="batch-end">
-              <option value="17">17:00</option>
-              <option value="18" selected>18:00</option>
-              <option value="19">19:00</option>
-              <option value="20">20:00</option>
-              <option value="21">21:00</option>
-            </select>
-          </div>
-        </div>
-        <div style="display: flex; gap: 10px;">
-          <button type="button" class="btn btn-primary" style="flex: 1;" onclick="applyBatchSlots(true)">Открыть диапазон</button>
-          <button type="button" class="btn btn-danger" style="flex: 1; background: #fee2e2; color: #ef4444;" onclick="applyBatchSlots(false)">Закрыть диапазон</button>
-        </div>
-      </div>
-
-      <!-- Управление услугами -->
+      <!-- 1. Управление услугами -->
       <div class="card">
         <div class="card-title">Управление услугами</div>
         <div id="admin-services-list" style="margin-bottom: 16px;"></div>
@@ -135,7 +96,66 @@
         </form>
       </div>
 
-      <!-- Расписание по часам -->
+      <!-- 2. Открыть запись (в середине) -->
+      <div class="card">
+        <div class="card-title">Открыть запись</div>
+        <div class="input-group">
+          <label>Дата</label>
+          <input type="date" id="batch-date">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="input-group">
+            <label>С какого часа</label>
+            <select id="batch-start">
+              <option value="06">06:00</option>
+              <option value="07">07:00</option>
+              <option value="08">08:00</option>
+              <option value="09" selected>09:00</option>
+              <option value="10">10:00</option>
+              <option value="11">11:00</option>
+              <option value="12">12:00</option>
+              <option value="13">13:00</option>
+              <option value="14">14:00</option>
+              <option value="15">15:00</option>
+              <option value="16">16:00</option>
+              <option value="17">17:00</option>
+              <option value="18">18:00</option>
+              <option value="19">19:00</option>
+              <option value="20">20:00</option>
+              <option value="21">21:00</option>
+              <option value="22">22:00</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>До какого часа</label>
+            <select id="batch-end">
+              <option value="07">07:00</option>
+              <option value="08">08:00</option>
+              <option value="09">09:00</option>
+              <option value="10">10:00</option>
+              <option value="11">11:00</option>
+              <option value="12">12:00</option>
+              <option value="13">13:00</option>
+              <option value="14">14:00</option>
+              <option value="15">15:00</option>
+              <option value="16">16:00</option>
+              <option value="17">17:00</option>
+              <option value="18" selected>18:00</option>
+              <option value="19">19:00</option>
+              <option value="20">20:00</option>
+              <option value="21">21:00</option>
+              <option value="22">22:00</option>
+              <option value="23">23:00</option>
+            </select>
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button type="button" class="btn btn-primary" style="flex: 1;" onclick="applyBatchSlots(true)">Открыть диапазон</button>
+          <button type="button" class="btn btn-danger" style="flex: 1; background: #fee2e2; color: #ef4444;" onclick="applyBatchSlots(false)">Закрыть диапазон</button>
+        </div>
+      </div>
+
+      <!-- 3. Расписание по часам -->
       <div class="card">
         <div class="card-title">
           <span>Расписание на день</span>
@@ -155,7 +175,7 @@
         </div>
       </div>
 
-      <!-- Настройки Telegram -->
+      <!-- 4. Настройки Telegram -->
       <div class="card">
         <div class="card-title">Telegram-уведомления</div>
         <form onsubmit="saveTgSettings(event)">
@@ -226,6 +246,10 @@
         alert('Выберите дату!');
         return;
       }
+      if (startHour > endHour) {
+        alert('Время "С" не может быть позже времени "До"!');
+        return;
+      }
 
       for (let h = startHour; h <= endHour; h++) {
         const timeStr = (h < 10 ? '0' : '') + h + ':00';
@@ -241,7 +265,7 @@
 
       localStorage.setItem('beauty_slots', JSON.stringify(slots));
       renderAdminSchedule();
-      showToast(isOpen ? 'Окна успешно открыты!' : 'Окна закрыты!');
+      showToast(isOpen ? 'Запись успешно открыта!' : 'Запись закрыта!');
     }
 
     function renderAdminServices() {
@@ -283,7 +307,7 @@
       tbody.innerHTML = '';
 
       let hours = [];
-      for (let h = 8; h <= 20; h++) {
+      for (let h = 6; h <= 23; h++) {
         hours.push((h < 10 ? '0' : '') + h + ':00');
       }
 
